@@ -1,0 +1,15 @@
+{
+  "name": "desafio-qa-nexdom",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Desafio tecnico de QA com Cypress para a NEXDOM e API do GitHub.",
+  "scripts": {
+    "cy:open": "cypress open",
+    "test:ui": "cypress run --spec cypress/e2e/ui/*.cy.js",
+    "test:api": "cypress run --spec cypress/e2e/api/*.cy.js",
+    "test": "cypress run"
+  },
+  "devDependencies": {
+    "cypress": "^15.0.0"
+  }
+}
