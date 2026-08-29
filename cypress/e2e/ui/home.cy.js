@@ -1,17 +1,18 @@
-const homePage = require('../../pages/home.page');
-const solucoesPage = require('../../pages/solucoes.page');
+const { pages } = require('../../pageObjects/pages');
+const { modulos } = require('../../pageObjects/modulos');
 
 describe('Verificacao da navegacao do site NEXDOM', () => {
   beforeEach(() => {
-    homePage.acessar();
+    pages.acessarHome();
   });
 
   it('Cenario 1 - deve carregar os elementos principais da pagina inicial', () => {
-    homePage.validarElementosPrincipais();
+    modulos.moduloVerificaPaginaInicial();
   });
 
-  it('Cenario 2 - deve navegar para uma pagina de Solucoes', () => {
-    homePage.abrirSolucoes();
-    solucoesPage.validarPaginaDeSolucao();
+  it('Cenario 2 - deve navegar para a pagina de Solucoes', () => {
+    // Solucoes e um menu com varias opcoes, nao uma pagina unica
+    // aqui a gente valida o caminho ate "Gestao de planos de saude"
+    modulos.moduloNavegaParaGestaoPlanos();
   });
 });

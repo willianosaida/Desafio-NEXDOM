@@ -7,6 +7,8 @@ describe('API do GitHub - ciclo de vida de um repositorio', () => {
   const issueTitle = 'Issue criada pelo teste automatizado';
 
   before(() => {
+    // mensagem de erro caso nao tenha preenchido o arquivo cypress.env.json 
+    // com githubToken e githubUser
     if (!githubToken() || !githubUser()) {
       throw new Error('Preencha githubToken e githubUser no arquivo cypress.env.json.');
     }
@@ -19,6 +21,7 @@ describe('API do GitHub - ciclo de vida de um repositorio', () => {
 
   const repositoryUrl = () => `${apiUrl()}/repos/${githubUser()}/${repositoryName}`;
 
+  // nome do repositorio leva timestamp pra nao colidir em execucoes repetidas
   const criarRepositorio = () => cy.request({
       method: 'POST',
       url: `${apiUrl()}/user/repos`,
@@ -68,16 +71,19 @@ describe('API do GitHub - ciclo de vida de um repositorio', () => {
   });
 
   it('deve criar, consultar, usar e excluir um repositorio', () => {
+    // cria o repositorio e confere se voltou com o nome certo
     criarRepositorio().then((createResponse) => {
       expect(createResponse.status).to.eq(201);
       expect(createResponse.body.name).to.eq(repositoryName);
     });
 
+    // repositorio criado precisa aparecer em uma consulta normal
     consultarRepositorio().then((repositoryResponse) => {
       expect(repositoryResponse.status).to.eq(200);
       expect(repositoryResponse.body.full_name).to.eq(`${githubUser()}/${repositoryName}`);
     });
 
+    // cria uma issue e ja usa o numero dela pra consultar em seguida
     criarIssue().then((issueResponse) => {
       expect(issueResponse.status).to.eq(201);
       return consultarIssue(issueResponse.body.number);
@@ -86,6 +92,7 @@ describe('API do GitHub - ciclo de vida de um repositorio', () => {
       expect(issueResponse.body.title).to.eq(issueTitle);
     });
 
+    // por fim, exclui o repositorio e confirma que ele sumiu (404)
     excluirRepositorio().then((deleteResponse) => {
       expect(deleteResponse.status).to.eq(204);
     });
