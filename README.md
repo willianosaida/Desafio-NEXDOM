@@ -108,8 +108,20 @@ cypress.config.js                   # Configuração do Cypress
 
 ---
 
+## Desafios encontrados
+
+O maior desafio foi validar o formulário de contato sem gerar um envio real: como o site está em produção, o teste precisou bloquear o evento de submit no próprio navegador (via `addEventListener` e `preventDefault()`), garantindo que o fluxo de preenchimento e validação fosse testado sem poluir a caixa de entrada da empresa com dados de teste.
+
+Outro ponto foi a navegação até as Soluções: não existe uma rota única `/solucoes/` — é um menu com várias páginas específicas. Foi preciso mapear o caminho real (menu → "Gestão de Planos de Saúde") em vez de testar uma página que não existe.
+
+No teste de API, o desafio foi garantir que o fluxo completo (criar, consultar, criar issue, consultar issue, excluir) rodasse de forma independente a cada execução, sem colidir com repositórios de execuções anteriores — resolvido gerando um nome de repositório único com timestamp a cada rodada — e sem versionar o token de acesso, que fica isolado em `cypress.env.json`, fora do controle de versão.
+
+---
+
 ## ✅ Detalhes Técnicos
 
 - **Page Objects**: Estrutura baseada em `elements/el.js` (seletores) → `pages.js` (ações) → `modulos.js` (fluxos)
 - **Formulário de Contato**: O envio é bloqueado via `preventDefault()` para evitar poluição da caixa de entrada real da NEXDOM
 - **Navegação de Soluções**: Acessa a página real via menu, sem rota agregadora `/solucoes/`
+
+
