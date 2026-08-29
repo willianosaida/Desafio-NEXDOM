@@ -1,82 +1,113 @@
-# Desafio tecnico QA Pleno - NEXDOM
+# Desafio Técnico QA Pleno - NEXDOM
 
-Projeto de testes automatizados em Cypress para os cenarios de front-end do site da NEXDOM e para o ciclo de vida de um repositorio na API do GitHub.
+Projeto de testes automatizados em Cypress para validar cenários de front-end do site NEXDOM e o ciclo de vida de repositórios na API do GitHub.
 
-## Requisitos
+---
+
+## 📋 Requisitos
 
 - Node.js 20 ou superior
 - npm
 - Internet para acessar o site NEXDOM
-- Token do GitHub somente para o teste de API (back-end)
+- Token do GitHub (somente para testes de API)
 
-## Instalacao
+---
+
+## 📥 Download e Instalação
+
+### 1. Clonar o repositório
+
+```bash
+git clone <url-do-repositorio>
+cd Desafio\ NEXDOM
+```
+
+### 2. Instalar dependências
 
 ```bash
 npm install
 ```
 
-## Testes de front-end
+---
 
-```bash
-npm run test:ui
+## ⚙️ Configuração
+
+### Para testes de Front-End
+
+Nenhuma configuração adicional é necessária. Os testes acessam o site público da NEXDOM.
+
+### Para testes da API do GitHub
+
+Crie um arquivo `cypress.env.json` na raiz do projeto com suas credenciais:
+
+```json
+{
+  "githubToken": "seu_token_github",
+  "githubUser": "seu_usuario_github"
+}
 ```
 
-Ou abra o Cypress para executar pela interface:
+**Importante:**
+- O arquivo `cypress.env.json` está no `.gitignore` — nunca será versionado
+- O token deve ter permissões para criar, deletar repositórios e criar issues
+- Nunca compartilhe seu token
+
+---
+
+## 🚀 Como Executar os Testes
+
+### Testes de Front-End (Cypress GUI)
 
 ```bash
 npm run cy:open
 ```
 
-Os Page Objects ficam em `cypress/pageObjects`: `elements/el.js` guarda os seletores, `pages.js` tem as acoes simples de cada tela e `modulos.js` encadeia essas acoes em fluxos completos. Os specs so chamam `modulos.*`, seguindo a arquitetura do exemplo fornecido no desafio.
+Abre a interface do Cypress. Selecione os testes `contato.cy.js` ou `home.cy.js` para executar.
 
-## Teste da API do GitHub
+### Testes de Front-End (Headless)
 
-Crie um arquivo `cypress.env.json` na raiz do projeto. Esse arquivo e ignorado pelo Git e deve conter o token e o usuario do GitHub:
-
-```json
-{
-  "githubToken": "seu_token",
-  "githubUser": "seu_usuario"
-}
+```bash
+npm run test:ui
 ```
 
-O token precisa ter permissao para criar e excluir repositorios e criar issues. Depois, execute:
+Executa todos os testes da UI em modo headless.
+
+### Testes da API do GitHub
 
 ```bash
 npx cypress run --spec cypress/e2e/api/github.cy.js
 ```
 
-O teste cria um repositorio publico temporario, consulta o repositorio, cria e consulta uma issue, exclui o repositorio e confirma o retorno `404`. O nome recebe um timestamp para evitar colisao.
+Executa os testes de API que validam:
+- Criar repositório
+- Consultar repositório
+- Criar issue
+- Deletar repositório
 
-Nao versione o arquivo `cypress.env.json` e nunca compartilhe o token. Para ajudar na configuracao, o projeto possui o arquivo `.env.example` apenas como referencia de variaveis.
+---
 
+## 📁 Estrutura do Projeto
 
-## Formulario de contato
-
-O cenario de contato nao envia uma mensagem para a NEXDOM. Depois de preencher e validar os campos, o teste bloqueia o submit nativo do formulário via `addEventListener` e `preventDefault()`. Assim, o fluxo de submissao e validado sem poluir a caixa de entrada da empresa.
-
-## Observacao sobre Solucoes
-
-O site nao possui uma rota `/solucoes/` unica. O teste abre o menu `Soluções` e acessa a pagina real `Gestão de Planos de Saúde`, validando a navegacao pelo caminho disponivel em producao.
-
-## Estrutura
-
-```text
+```
 cypress/
-  e2e/
-    api/github.cy.js
-    ui/home.cy.js
-    ui/contato.cy.js
-  pageObjects/
-    elements/el.js
-    pages.js
-    modulos.js
-features/desafio.feature
-cypress.config.js
+  ├── e2e/
+  │   ├── api/github.cy.js          # Testes da API GitHub
+  │   └── ui/
+  │       ├── home.cy.js            # Testes da página Home
+  │       └── contato.cy.js         # Testes do formulário de Contato
+  └── pageObjects/
+      ├── elements/el.js            # Seletores dos elementos
+      ├── pages.js                  # Ações simples de cada página
+      └── modulos.js                # Fluxos completos
+features/
+  └── desafio.feature               # Cenários em Gherkin
+cypress.config.js                   # Configuração do Cypress
 ```
 
-## Desafios encontrados
+---
 
-- O formulario esta em um site publico e em producao; por isso o envio foi bloqueado via cancelamento do evento de submit nativo, sem deixar a requisicao real sair.
-- A navegacao de Solucoes e feita por um menu para paginas especificas, sem uma rota agregadora.
-- O teste de API exige credencial externa e, por seguranca, nenhum token fica versionado no projeto.
+## ✅ Detalhes Técnicos
+
+- **Page Objects**: Estrutura baseada em `elements/el.js` (seletores) → `pages.js` (ações) → `modulos.js` (fluxos)
+- **Formulário de Contato**: O envio é bloqueado via `preventDefault()` para evitar poluição da caixa de entrada real da NEXDOM
+- **Navegação de Soluções**: Acessa a página real via menu, sem rota agregadora `/solucoes/`
