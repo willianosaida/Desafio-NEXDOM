@@ -19,8 +19,10 @@ Projeto de testes automatizados em Cypress para validar cenários de front-end d
 
 ```bash
 git clone <url-do-repositorio>
-cd Desafio\ NEXDOM
+cd "Desafio NEXDOM"
 ```
+
+> **Nota:** Use aspas para funcionar em qualquer terminal (Bash, PowerShell, CMD)
 
 ### 2. Instalar dependências
 
